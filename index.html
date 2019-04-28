@@ -144,7 +144,8 @@
                 navigator.mediaDevices.getUserMedia({
                         'audio': false,
                         'video': {
-                            'facingMode': "user"
+                            // 'facingMode': "user"
+                            video: { facingMode: { exact: "environment" } }
                         } //调用前置摄像头
                         // video: { facingMode: { exact: "environment" } }//后置
                         //                     {
@@ -163,17 +164,23 @@
                         };
 
                         video.addEventListener('play', function () {
-                            var loop = function () {
+                            // var loop = function () {
+                            //     videoToCanvas(video)
+                            //     timer = requestAnimationFrame(loop)
+                            // }
+                            // loop()
+
+                            timer=  setInterval(function(){
                                 videoToCanvas(video)
-                                timer = requestAnimationFrame(loop)
-                            }
-                            loop()
+                            },30)
                         }, false);
                         video.addEventListener('pause', function () {
-                            cancelAnimationFrame(timer);
+                            // cancelAnimationFrame(timer);
+                            clearInterval(timer)
                         }, false);
                         video.addEventListener('ended', function () {
-                            cancelAnimationFrame(timer);
+                            // cancelAnimationFrame(timer);
+                            clearInterval(timer)
                         }, false);
                     })
                     .catch(function (error) {
