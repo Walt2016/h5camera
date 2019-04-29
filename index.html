@@ -91,8 +91,10 @@
         });
 
 
-        // drawGrid('#09f', 10, 10);
-        function drawGrid(color, stepx, stepy) {
+        function drawGrid(ctx, color, stepx, stepy) {
+            ctx.font = "30px sans-serif";
+            ctx.fillStyle = "blue";
+            ctx.fillText("请眨眼", 50, 50);
             ctx.save()
 
             ctx.strokeStyle = color;
@@ -116,17 +118,41 @@
         }
 
         var videoToCanvas = function (video) {
-            if (video)
+            if (video) {
                 ctx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height)
-            ctx.font = "30px sans-serif";
-            ctx.fillStyle = "blue";
-            ctx.fillText("请眨眼", 50, 50);
-            drawGrid('#000', 30, 30);
-
-            ctx2.drawImage(tmpCanvas, 0, 0, canvas.width, canvas.height)
-
+                ctx2.drawImage(tmpCanvas, 0, 0, canvas.width, canvas.height)
+            }
+            drawGrid(ctx2, '#000', 30, 30);
         }
+
         var timer;
+        var loop = function () {
+            videoToCanvas(video)
+            timer = requestAnimationFrame(loop)
+
+            // timer = setInterval(function () {
+            //                     videoToCanvas(video)
+            //                 }, 30)
+        }
+
+        var clear = function () {
+            cancelAnimationFrame(timer);
+            // clearInterval(timer)
+        }
+        //调用成功
+        function getVideoStream(stream) {
+            buffer = stream;
+            // if(video.mozSrcObject !== undefined){
+            //     video.mozSrcObject = buffer;
+            // }else{
+            if (window.URL) {
+                video.src = window.URL.createObjectURL(buffer)
+            } else {
+                video.srcObject = buffer;
+            }
+
+            // }
+        }
 
 
         function invokingCamera() {
@@ -154,29 +180,20 @@
 
                     })
                     .then(function (mediaStream) {
-                        video.srcObject = mediaStream;
+                        // video.srcObject = mediaStream;
+                        getVideoStream(mediaStream)
                         video.onloadedmetadata = function (e) {
                             video.play();
                         };
 
                         video.addEventListener('play', function () {
-                            // var loop = function () {
-                            //     videoToCanvas(video)
-                            //     timer = requestAnimationFrame(loop)
-                            // }
-                            // loop()
-
-                            timer = setInterval(function () {
-                                videoToCanvas(video)
-                            }, 30)
+                            loop()
                         }, false);
                         video.addEventListener('pause', function () {
-                            // cancelAnimationFrame(timer);
-                            clearInterval(timer)
+
                         }, false);
                         video.addEventListener('ended', function () {
-                            // cancelAnimationFrame(timer);
-                            clearInterval(timer)
+                            clear();
                         }, false);
                     })
                     .catch(function (error) {
@@ -192,19 +209,9 @@
                 alert('不支持摄像头调用！')
             }
         }
-        //调用成功
-        function getVideoStream(stream) {
-            buffer = stream;
-            // if(video.mozSrcObject !== undefined){
-            //     video.mozSrcObject = buffer;
-            // }else{
-            video.src = window.URL && window.URL.createObjectURL(buffer)
-            // }
-        }
 
-        function getFail() {
 
-        }
+        function getFail() {}
 
 
         function closeCamera() {
