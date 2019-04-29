@@ -33,7 +33,7 @@
 
 <body>
     <video id="video" width="640" height="480" class="outscreen"></video>
-    <!-- <canvas id="tmpCanvas" width="640" height="480" style="display:none"></canvas> -->
+    <canvas id="tmpCanvas" width="640" height="480" style="display:none"></canvas>
     <canvas id="canvas" width="640" height="480"></canvas>
 
     <div class="btn capture">拍照</div>
@@ -74,28 +74,19 @@
 
 
         var video = document.querySelector('video');
-        // var tmpCanvas = document.getElementById("tmpCanvas");
+        var tmpCanvas = document.getElementById("tmpCanvas");
+        tmpCanvas.width = 320, tmpCanvas.height = 456;
         var canvas = document.getElementById("canvas");
         canvas.width = 320, canvas.height = 456;
-        var ctx = canvas.getContext('2d');
+        var ctx2 = canvas.getContext('2d');
+        var ctx = tmpCanvas.getContext('2d');
         var capture = document.querySelector(".capture")
 
         capture.addEventListener("click", function () {
-
-            // var img = document.getElementById("save_img");
-
             var img = document.createElement("img")
             var tempSrc = canvas.toDataURL("image/png");
-
-            // svaeHref.href=tempSrc;
-
             img.src = tempSrc;
-            // img
-
             document.querySelector(".album").appendChild(img)
-
-
-
         });
 
 
@@ -125,14 +116,14 @@
 
         var videoToCanvas = function (video) {
             if (video)
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
+                ctx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height)
             ctx.font = "30px sans-serif";
             ctx.fillStyle = "blue";
             ctx.fillText("请眨眼", 50, 50);
-
             drawGrid('#000', 30, 30);
-            // var ctx2 = this.cas.getContext('2d');
-            //         ctx2.drawImage(cs , -this.cols*this.w , -this.rows*this.h , vw , vh);
+
+            ctx2.drawImage(tmpCanvas, 0, 0, canvas.width, canvas.height)
+
         }
         var timer;
 
@@ -145,7 +136,11 @@
                         'audio': false,
                         'video': {
                             // 'facingMode': "user"
-                            video: { facingMode: { exact: "environment" } }
+                            video: {
+                                facingMode: {
+                                    exact: "environment"
+                                }
+                            }
                         } //调用前置摄像头
                         // video: { facingMode: { exact: "environment" } }//后置
                         //                     {
@@ -170,9 +165,9 @@
                             // }
                             // loop()
 
-                            timer=  setInterval(function(){
+                            timer = setInterval(function () {
                                 videoToCanvas(video)
-                            },30)
+                            }, 30)
                         }, false);
                         video.addEventListener('pause', function () {
                             // cancelAnimationFrame(timer);
