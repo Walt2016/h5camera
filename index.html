@@ -7,10 +7,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>h5camera</title>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         .outscreen {
             display: block;
             position: absolute;
             top: -6000px;
+        }
+
+        .btn-group {
+            display: flex;
+
         }
 
         .btn {
@@ -28,203 +38,52 @@
 
         .album img {
             width: 60px;
+            position: relative;
+        }
+
+        /* .album img::before{
+            content: "1";
+            position:absolute;
+            right: 10px;
+            top:10px;
+            font-size: 15px;
+        } */
+
+        .example-pic {
+            width: 100%;
+            height: 400px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            /* background-position: center top; */
+        }
+
+        .survey_step1 {
+            background-image: url("img/claim/survey_step1.jpg");
+        }
+
+        .hide{
+            display:none;
         }
     </style>
 </head>
 
 <body>
-    <video id="video" width="640" height="480" class="outscreen"></video>
-    <canvas id="tmpCanvas" width="640" height="480" style="display:none"></canvas>
-    <canvas id="canvas" width="640" height="480"></canvas>
 
-    <div class="btn capture">拍照</div>
+    <video id="video" width="640" height="480" class="outscreen"></video>
+    <canvas id="origialCanvas" width="640" height="480" class="hide"></canvas>
+    <canvas id="canvas" width="640" height="480" class=""></canvas>
+    <div class="btn-group">
+        <div class="btn capture">拍照</div>
+        <div class="btn stop hide">关闭</div>
+        <!-- <div class="btn weixin">weixin</div> -->
+        
+    </div>
 
     <div class="album"></div>
 
-    <script>
-        window.navigator.getUserMedia = navigator.getUserMedia || navigator.webKitGetUserMedia || navigator
-            .mozGetUserMedia || navigator.msGetUserMedia;
+    <select name="" id="select" class="hide"></select>
 
-
-        (function () {
-            var lastTime = 0;
-            var vendors = ['webkit', 'moz'];
-            for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-                window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-                window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] ||
-                    // name has changed in Webkit
-                    window[vendors[x] + 'CancelRequestAnimationFrame'];
-            }
-            if (!window.requestAnimationFrame) {
-                window.requestAnimationFrame = function (callback, element) {
-                    var currTime = new Date().getTime();
-                    var timeToCall = Math.max(0, 16.7 - (currTime - lastTime));
-                    var id = window.setTimeout(function () {
-                        callback(currTime + timeToCall);
-                    }, timeToCall);
-                    lastTime = currTime + timeToCall;
-                    return id;
-                };
-            }
-            if (!window.cancelAnimationFrame) {
-                window.cancelAnimationFrame = function (id) {
-                    clearTimeout(id);
-                };
-            }
-        }());
-
-
-        var video = document.querySelector('video');
-        var tmpCanvas = document.getElementById("tmpCanvas");
-        tmpCanvas.width = 320, tmpCanvas.height = 456;
-        var canvas = document.getElementById("canvas");
-        canvas.width = 320, canvas.height = 456;
-        var ctx2 = canvas.getContext('2d');
-        var ctx = tmpCanvas.getContext('2d');
-        var capture = document.querySelector(".capture")
-
-        capture.addEventListener("click", function () {
-            var img = document.createElement("img")
-            var tempSrc = canvas.toDataURL("image/png");
-            img.src = tempSrc;
-            document.querySelector(".album").appendChild(img)
-        });
-
-
-        function drawGrid(ctx, color, stepx, stepy) {
-            ctx.font = "30px sans-serif";
-            ctx.fillStyle = "blue";
-            ctx.fillText("请眨眼", 50, 50);
-            ctx.save()
-
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 0.5;
-            // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-            for (var i = stepx + 0.5; i < ctx.canvas.width; i += stepx) {
-                ctx.beginPath();
-                ctx.moveTo(i, 0);
-                ctx.lineTo(i, ctx.canvas.height);
-                ctx.stroke();
-            }
-
-            for (var i = stepy + 0.5; i < ctx.canvas.height; i += stepy) {
-                ctx.beginPath();
-                ctx.moveTo(0, i);
-                ctx.lineTo(ctx.canvas.width, i);
-                ctx.stroke();
-            }
-            ctx.restore();
-        }
-
-        var videoToCanvas = function (video) {
-            if (video) {
-                ctx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height)
-                ctx2.drawImage(tmpCanvas, 0, 0, canvas.width, canvas.height)
-            }
-            drawGrid(ctx2, '#000', 30, 30);
-        }
-
-        var timer;
-        var loop = function () {
-            videoToCanvas(video)
-            timer = requestAnimationFrame(loop)
-
-            // timer = setInterval(function () {
-            //                     videoToCanvas(video)
-            //                 }, 30)
-        }
-
-        var clear = function () {
-            cancelAnimationFrame(timer);
-            // clearInterval(timer)
-        }
-        //调用成功
-        function getVideoStream(stream) {
-            buffer = stream;
-            // if(video.mozSrcObject !== undefined){
-            //     video.mozSrcObject = buffer;
-            // }else{
-            if (window.URL) {
-                video.src = window.URL.createObjectURL(buffer)
-            } else {
-                video.srcObject = buffer;
-            }
-
-            // }
-        }
-
-
-        function invokingCamera() {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                //新API MediaDevices.getUserMedia可以通过video的facingMode属性指定调用手机的前置或后置摄像头
-                // console.log(222);
-                navigator.mediaDevices.getUserMedia({
-                        'audio': false,
-                        'video': {
-                            // 'facingMode': "user"
-                            video: {
-                                facingMode: {
-                                    exact: "environment"
-                                }
-                            }
-                        } //调用前置摄像头
-                        // video: { facingMode: { exact: "environment" } }//后置
-                        //                     {
-                        //   audio: true,
-                        //   video: {
-                        //     width: { min: 1024, ideal: 1280, max: 1920 },
-                        //     height: { min: 776, ideal: 720, max: 1080 }
-                        //   }
-                        // }
-
-                    })
-                    .then(function (mediaStream) {
-                        // video.srcObject = mediaStream;
-                        getVideoStream(mediaStream)
-                        video.onloadedmetadata = function (e) {
-                            video.play();
-                        };
-
-                        video.addEventListener('play', function () {
-                            loop()
-                        }, false);
-                        video.addEventListener('pause', function () {
-
-                        }, false);
-                        video.addEventListener('ended', function () {
-                            clear();
-                        }, false);
-                    })
-                    .catch(function (error) {
-                        console.log(error)
-                    })
-            } else if (navigator.getUserMedia) {
-                //navigator.getUserMediau已经从 Web 标准中删除，部分浏览器可以使用
-                navigator.getUserMedia({
-                    'video': true,
-                    'audio': true
-                }, getVideoStream, getFail)
-            } else {
-                alert('不支持摄像头调用！')
-            }
-        }
-
-
-        function getFail() {}
-
-
-        function closeCamera() {
-            // buffer && buffer.getTracks()[1].stop(); //关闭摄像头
-            // var video = document.querySelector('video');
-            // video.close();
-        }
-
-        window.addEventListener("load", function () {
-            invokingCamera()
-            // videoToCanvas()
-        })
-    </script>
+    <script src="index.js"></script>
 
 </body>
 
