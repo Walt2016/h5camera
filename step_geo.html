@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>太平车险</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+
+<body>
+    <div class="page" data="1">
+        <div class="title">现场拍照</div>
+        <div class="step">第1步</div>
+        <div class="example-pic"></div>
+        <div class="btn-group smallbtn">
+            <div class="btn capture">拍照</div>
+        </div>
+        <div class="album">
+            <ul data="1"></ul>
+            <ul data="2"></ul>
+            <ul data="3"></ul>
+            <ul data="4"></ul>
+            <ul data="5"></ul>
+        </div>
+        <div class="btn-group smallbtn">
+            <div class="btn prev disable">上一步</div>
+            <div class="btn next">下一步</div>
+        </div>
+
+        <div class="btn-group">
+            <div class="btn uploadPic hide">提交审核</div>
+        </div>
+
+    </div>
+    <input type="hidden" name="lossid" id="lossid" value="4969995">
+    <input type="hidden" name="nmb_pic" id="lossidother1" value="4969994">
+    <input type="hidden" name="nmb_pic" id="nmb_pic1" value="0">
+    <input type="hidden" name="nmb_pic" id="nmb_pic2" value="0">
+    <input type="hidden" name="nmb_pic" id="nmb_pic3" value="0">
+    <input type="hidden" name="nmb_pic" id="nmb_pic4" value="0">
+    <input type="hidden" name="nmb_pic" id="nmb_pic5" value="0">
+
+
+    <!-- <label>照相机</label> -->
+    <!-- <input type="file" id='image' accept="image/*" capture='camera'> -->
+
+    <input type="file" accept="image/*" capture="camera" id="imgUpload" style="display:none" name="img"
+        class="input-upload-image">
+    <div id="dialog1" class="dialog hide">
+        <div class="mask"></div>
+        <div class="mask-content">
+            <ul>
+                <li onclick="doClose('1')">前45°角拍摄</li>
+                <li onclick="doClose('1')">后45°角拍摄</li>
+            </ul>
+        </div>
+    </div>
+    <div id="dialog2" class="dialog hide">
+        <div class="mask"></div>
+        <div class="mask-content">
+            <ul>
+                <li onclick="doSmillType('CAR001')">驾驶证（正、付本）</li>
+                <li onclick="doSmillType('CAR002')">行驶证（正、付本）</li>
+                <li onclick="doSmillType('CAR013')">身份证明</li>
+                <li onclick="doSmillType('P0001')">财务单证</li>
+                <li onclick="doSmillType('UNTYPE')">其它</li>
+            </ul>
+        </div>
+    </div>
+    <div id="dialog3" class="dialog hide">
+        <div class="mask"></div>
+        <div class="mask-content">
+            <ul>
+                <li onclick="doSmillType('CAR001')">驾驶证（正、付本）</li>
+                <li onclick="doSmillType('CAR002')">行驶证（正、付本）</li>
+                <li onclick="doSmillType('UNTYPE')">三者交强险标志</li>
+                <li onclick="doSmillType('UNTYPE')">其它</li>
+            </ul>
+        </div>
+    </div>
+    <div id="mask" class="mask hide">
+        <div id="maskClose" class="mask-close"></div>
+        <img id="bigPic" class="big-pic">
+    </div>
+    <!-- <br>
+    <label>摄像机</label>
+    <input type="file" id='video' accept="video/*" capture='camcorder'> -->
+    <script src="websql.js"></script>
+    <script>
+        'use strict';
+        var _ = websql()._;
+        var $ = _.query;
+        var capture = $(".capture");
+        var dialog1 = $("#dialog1");
+        var dialog2 = $("#dialog2");
+        var imgUpload = $("#imgUpload")
+        var next = $(".next")
+        var prev = $(".prev")
+        var page = $(".page")
+        var title = $(".title")
+        var step = $(".step")
+        var uploadPic = $(".uploadPic")
+        var insuranceType = "A"; //  险种大类分：车险(A) 和 补传(C)
+        var additionalType = "0"; //资料补传
+        var lossother = "1";
+        var album = $(".album")
+        var mask = $("#mask");
+        var bigPic = $("#bigPic");
+        var maskClose = $("#maskClose");
+        var addr = ""
+
+
+        function maskHeight() {
+            var bodyH = document.body.offsetHeight
+            var windowH = window.screen.height
+            var h = (bodyH - windowH > 0 ? bodyH : windowH) + "px"
+            _.queryAll(".mask").forEach(function (t) {
+                t.style.height = h
+            })
+        }
+
+
+
+        var showDialog = function (num) {
+            switch (num) {
+                case 1:
+                    maskHeight()
+                    _.show(dialog1)
+                    break;
+                    // case 2:
+                    //     _.show(dialog2)
+                    //     break;
+                case 5:
+                    maskHeight()
+                    _.show(dialog3)
+                    break;
+                default:
+                    invokingCamera()
+                    // _.show(dialog1)
+            }
+        }
+        var hideDialog = function (num) {
+            switch (num) {
+                case 1:
+                    _.hide(dialog1)
+                    break;
+                    // case 2:
+                    //     _.hide(dialog2)
+                    //     break;
+                case 5:
+                    _.hide(dialog3)
+                    break;
+                default:
+
+            }
+
+        }
+
+        var disableBtn = function (num) {
+            switch (num) {
+                case 1:
+                    _.addClass(prev, "disable")
+                    _.removeClass(next, "disable")
+                    break;
+                case 5:
+                    _.removeClass(prev, "disable")
+                    _.addClass(next, "disable")
+                    _.show(uploadPic)
+                    break;
+                default:
+                    _.removeClass(prev, "disable")
+                    _.removeClass(next, "disable")
+            }
+
+        }
+        var setPage = function (num) {
+            step.innerText = "第" + num + "步"
+            page.setAttribute("data", num)
+        }
+        _.click(capture, function () {
+            var num = Number(page.getAttribute("data"));
+            showDialog(num)
+        })
+        _.click(next, function () {
+            if (_.hasClass(next, "disable")) {
+                return
+            }
+            var num = Number(page.getAttribute("data")) + 1
+            disableBtn(num)
+            setPage(num)
+        })
+
+        _.click(prev, function () {
+            if (_.hasClass(prev, "disable")) {
+                return
+            }
+            var num = Number(page.getAttribute("data")) - 1
+            disableBtn(num)
+            setPage(num)
+        })
+
+        var doClose = function () {
+            var num = Number(page.getAttribute("data"));
+            hideDialog(num)
+            invokingCamera()
+        }
+        var doSmillType = function () {
+            doClose()
+        }
+
+        var invokingCamera = function () {
+            imgUpload.click();
+        }
+
+        var info = navigator.userAgent.toLowerCase();
+        if (info.match(/iPhone\sOS/i)) {
+            document.querySelector("input").removeAttribute("capture")
+            // dom.removeAttribute("capture")
+
+        }
+
+        //初始化数据
+        function initData(step, uploadPicVO) {
+
+            var lossid = $("#lossid").value
+            var mylossid = $("#mylossid").value
+            var stepId = "";
+            uploadPicVO.imgCarType = "1";
+            uploadPicVO.updateType = "1";
+            uploadPicVO.lossid = lossid;
+            if (uploadPicVO.lossid == "" || uploadPicVO.lossid == undefined || uploadPicVO.lossid == null) {
+                uploadPicVO.lossid = "0";
+            }
+            if (additionalType == '0') {
+                if (step == '1') {
+                    uploadPicVO.stepId = "A";
+                    uploadPicVO.lossid = lossid;
+                    uploadPicVO.picDescription = "事故全景";
+                } else if (step == '2') {
+                    uploadPicVO.stepId = "B";
+                    uploadPicVO.lossid = mylossid;
+                    uploadPicVO.picDescription = "本车碰撞全景";
+                } else if (step == '3') {
+                    //碰撞部位
+                    uploadPicVO.stepId = "C";
+                    uploadPicVO.lossid = mylossid;
+                    uploadPicVO.picDescription = "本车碰撞部位";
+                } else if (step == '4') {
+                    //车架号
+                    uploadPicVO.stepId = "D";
+                    uploadPicVO.lossid = mylossid;
+                    uploadPicVO.picDescription = "车架号";
+                } else if (step == '5') {
+                    //证件号码
+                    uploadPicVO.stepId = "F";
+                    uploadPicVO.lossid = mylossid;
+                    uploadPicVO.picDescription = "证件";
+                } else if (step.substr(0, 1) == '6') {
+                    uploadPicVO.stepId = "B" + step.substr(1, 1);
+                    uploadPicVO.picDescription = "三者车" + step.substr(1, 1) + "：本车碰撞全景";
+                    uploadPicVO.lossid = $("#lossidother" + step.substr(1, 1)).value;
+                    uploadPicVO.imgCarType = "2";
+                } else if (step.substr(0, 1) == '7') {
+                    uploadPicVO.stepId = "C" + step.substr(1, 1);
+                    uploadPicVO.picDescription = "三者车" + step.substr(1, 1) + "：本车碰撞部位";
+                    uploadPicVO.lossid = $("#lossidother" + step.substr(1, 1)).value;
+                    uploadPicVO.imgCarType = "2";
+                } else if (step.substr(0, 1) == '8') {
+                    uploadPicVO.stepId = "D" + step.substr(1, 1);
+                    uploadPicVO.picDescription = "三者车" + step.substr(1, 1) + "：车架号";
+                    uploadPicVO.lossid = $("#lossidother" + step.substr(1, 1)).value;
+                    uploadPicVO.imgCarType = "2";
+
+                } else if (step.substr(0, 1) == '9') {
+                    uploadPicVO.stepId = "F" + step.substr(1, 1);
+                    uploadPicVO.picDescription = "三者车" + step.substr(1, 1) + "：证件";
+                    uploadPicVO.lossid = $("#lossidother" + step.substr(1, 1)).value;
+                    uploadPicVO.imgCarType = "2";
+                } else if (step.substr(0, 2) == '10') {
+                    uploadPicVO.stepId = "E" + step.substr(2, 1);
+                    uploadPicVO.picDescription = "撞物体" + step.substr(2, 1);
+                    uploadPicVO.lossid = $("#lossidobject" + step.substr(2, 1)).value;
+                }
+            } else {
+                //补传
+                uploadPicVO.stepId = "Z";
+                uploadPicVO.picDescription = "资料补全";
+                uploadPicVO.updateType = "2";
+                uploadPicVO.lossid = $("#lossidAdd").value;
+            }
+            if (uploadPicVO.smillType == '' || uploadPicVO.smillType == undefined || uploadPicVO.smillType == null) {
+                uploadPicVO.smillType = uploadPicVO.stepId;
+            }
+            return uploadPicVO;
+        }
+
+        function overCheck() {
+            if (additionalType == '0') {
+                for (var i = 1; i <= 5; i++) {
+                    if ($("#nmb_pic" + i).value == 0) {
+                        alert('第' + i + '步没照片，请拍照再提交');
+                        setPage(i)
+                        return false;
+                    }
+                }
+                // else {
+
+                //     lossother = lossother * 1;
+                //     for (var i = 0; i < lossother; i++) { //循环三者车的图片数量
+
+                //         if ($("#nmb_pic6" + (i + 1)).value == 0) {
+                //             alert('第' + (1 + 5 + 4 * i) + '步没照片，请拍照再提交');
+                //             return;
+                //         } else if ($("#nmb_pic7" + (i + 1)).value == 0) {
+                //             alert('第' + (2 + 5 + 4 * i) + '步没照片，请拍照再提交');
+                //             return;
+                //         } else if ($("#nmb_pic8" + (i + 1)).value == 0) {
+                //             alert('第' + (3 + 5 + 4 * i) + '步没照片，请拍照再提交');
+                //             return;
+                //         } else if ($("#nmb_pic9" + (i + 1)).value == 0) {
+                //             alert('第' + (4 + 5 + 4 * i) + '步没照片，请拍照再提交');
+                //             return;
+                //         }
+
+
+                //     }
+                //     lossobject = lossobject * 1;
+                //     for (i = 0; i < lossobject; i++) { //循环的图片
+
+                //         if ($("#nmb_pic10" + (i + 1)).value == 0) {
+                //             alert('第' + (1 + 5 + 4 * lossother + i) + '步没照片，请拍照再提交');
+                //             return;
+                //         }
+
+                //     }
+
+
+                // }
+
+            } else {
+                if ($("#nmb_pic11").value == 0) {
+                    alert('没有照片，请拍照再提交');
+                    return;
+                }
+            }
+            alert('已成功提交！等候工作人员审核通过后即可离开现场');
+
+        }
+
+        _.click(uploadPic, overCheck)
+
+        var result1 = '',
+            result2 = '',
+            result3 = '',
+            result4 = '',
+            result5 = '',
+            result6 = '';
+        var dataUrl;
+
+        function initViews(nmb, step, localId, start) {
+            try {
+                start = "1"
+                if (start == "0") {
+                    start = "未上传……";
+                } else if (start == "1") {
+                    start = "已上传";
+                } else if (start == "2") {
+                    start = "上传失败";
+                }
+                nmb = nmb * 1 + step * 1000;
+                //var html="<li><div><img style='width:100%' src='"+localId+"'/></div>";
+                //html+="<div id='div"+nmb+"'>"+start+"</div></li>";
+                // var html = "<li class='pic'><img src='" + localId + "'><span class='txt' id='txt_" + nmb + "'>" +
+                //     start +
+                //     "</span></li>";
+                // $("#pic_" + step).append(html);
+                var li = _.li([_.img(localId), _.span(start, {
+                    class: "text",
+                    id: "text_" + nmb
+                })], {
+                    class: "pic"
+                })
+
+                $('.album ul[data="' + step + '"]').appendChild(li)
+
+                $('#nmb_pic' + step).value = Number($('#nmb_pic' + step).value) + 1
+
+
+
+
+            } catch (e) {
+                //alert("initViews():"+e.message+" nmb:"+nmb+" step:"+step);
+            }
+        }
+
+        // var position = ""
+        // var latitude, longitude;
+        // if ('geolocation' in navigator) {
+        //     navigator.geolocation.getCurrentPosition(function (position) {
+        //         latitude = position.coords.latitude;
+        //         longitude = position.coords.longitude;
+        //     });
+        // }
+
+        _.addEvent("change", imgUpload, function () {
+            var reader = new FileReader();
+            if (this.files.length == 0) {
+                return;
+            }
+            var fileSize = Math.round(this.files[0].size / 1024);
+            if (fileSize < 30) { //单位为kb 
+                alert("图片过小，请重新上传！");
+                return;
+            }
+
+
+
+            reader.onload = function (e) {
+                var img = new Image(),
+                    maxW = 1000; //设置最大宽度
+                var res = this.result;
+                img.onload = function () {
+                    var cvs = document.createElement('canvas'),
+                        ctx = cvs.getContext('2d');
+
+                    // result2 = img.width;
+                    // result3 = img.height;
+                    if (img.width > maxW) {
+                        img.height *= maxW / img.width;
+                        img.width = maxW;
+                    }
+                    cvs.width = img.width;
+                    cvs.height = img.height;
+
+                    result4 = cvs.width;
+                    result5 = cvs.height;
+
+                    ctx.clearRect(0, 0, cvs.width, cvs.height);
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                    ctx.font = "30px sans-serif";
+                    ctx.fillStyle = "blue";
+                    ctx.fillText("标的车：xxx（车牌号）", 50, cvs.height - 50);
+                    ctx.fillText("拍摄时间:" + _.time(new Date()).format("yyyy-MM-dd hh:mm:ss"), 50, cvs
+                        .height - 80);
+                    ctx.fillText("拍摄人:test", 50, cvs.height - 110);
+                    if (addr)
+                        ctx.fillText("地址信息:" + addr, 50, cvs.height -
+                            140);
+
+                    //标的车：xxx（车牌号）、拍摄时间、拍摄人、拍摄具体地址信息
+
+                    var compressRate = getCompressRate(1, fileSize);
+
+                    dataUrl = cvs.toDataURL('image/jpeg', compressRate);
+
+                    // initViews(qjnmb, qjstep, dataUrl, "0");
+                    var step = page.getAttribute("data")
+                    initViews(1, step, dataUrl, "0");
+
+                    // upServerId(qjnmb, dataUrl, qjstep, qjuploadPicVO, 1);
+
+
+                };
+                img.src = res;
+
+
+            };
+
+            reader.readAsDataURL(this.files[0]);
+
+            result1 = this.files[0].size + ' Bytes';
+        })
+
+        _.click(album, function (e) {
+            // console.log(e.target)
+
+            var el = e.target
+            if (el.tagName.toLowerCase() === "img") {
+                bigPic.src = el.src
+                maskHeight()
+                _.show(mask)
+            }
+        })
+        _.click(maskClose, function () {
+            _.hide(mask)
+        })
+    </script>
+
+    <script>
+        var compress = function (res, fileSize) {
+            var img = new Image(),
+                maxW = 400; //设置最大宽度
+
+            img.onload = function () {
+                var cvs = document.createElement('canvas'),
+                    ctx = cvs.getContext('2d');
+
+                result2 = img.width;
+                result3 = img.height;
+
+                if (img.width > maxW) {
+                    img.height *= maxW / img.width;
+                    img.width = maxW;
+                }
+
+                cvs.width = img.width;
+                cvs.height = img.height;
+
+                result4 = cvs.width;
+                result5 = cvs.height;
+
+                ctx.clearRect(0, 0, cvs.width, cvs.height);
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                var compressRate = getCompressRate(1, fileSize);
+
+                dataUrl = cvs.toDataURL('image/jpeg', compressRate);
+
+            };
+
+            img.src = res;
+        };
+
+        function getCompressRate(allowMaxSize, fileSize) { //计算压缩比率，size单位为MB
+            var compressRate = 1;
+
+            if (fileSize / allowMaxSize > 4) {
+                compressRate = 0.8;
+            } else if (fileSize / allowMaxSize > 3) {
+                compressRate = 0.8;
+            } else if (fileSize / allowMaxSize > 2) {
+                compressRate = 0.9;
+            } else if (fileSize > allowMaxSize) {
+                compressRate = 0.9;
+            } else {
+                compressRate = 1;
+            }
+
+            result6 = compressRate;
+
+            return compressRate;
+        }
+    </script>
+
+    <!-- <iframe id="geoPage" width=0 height=0 frameborder=0 style="display:none;" scrolling="no"
+        src="https://apis.map.qq.com/tools/geolocation?key=GO5BZ-R3QRI-3JLGU-55DJP-R3X2F-HFFFG&referer=h5web">
+    </iframe> -->
+
+    <script type="text/javascript" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js">
+    </script>
+    <script>
+        var options = {
+            timeout: 8000
+        };
+        var geolocation = new qq.maps.Geolocation("GO5BZ-R3QRI-3JLGU-55DJP-R3X2F-HFFFG", "h5web");
+        geolocation.getLocation(function (position) {
+            addr = position.addr
+        }, function () {
+            console.log("定位失败")
+        }, options)
+
+
+        // window.addEventListener('message', function (event) {
+        //     // 接收位置信息
+
+        //     //             {   "module":"geolocation",
+        //     //     "nation": "中国",
+        //     //     "province": "广州省",
+        //     //     "city":"深圳市",
+        //     //     "district":"南山区",
+        //     //     "adcode":"440305", //行政区ID，六位数字, 前两位是省，中间是市，后面两位是区，比如深圳市ID为440300
+        //     //     "addr":"深圳大学杜鹃山(白石路北250米)",
+        //     //     "lat":22.530001, //火星坐标(gcj02)，腾讯、Google、高德通用
+        //     //     "lng":113.935364,
+        //     //     "accuracy":13 //误差范围，以米为单位
+        //     // }
+        //     var loc = event.data;
+        //     console.log('location', loc);
+        //     if (loc) {
+        //         addr = loc.addr
+        //     }
+
+        // }, false);
+    </script>
+
+
+</body>
+
+</html>
