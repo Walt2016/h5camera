@@ -208,12 +208,19 @@ ul {
     font-weight: 700;
 }
 
-.auto-deal .tit {
+/* .auto-deal .tit {
     margin-top: 10px;
     margin-left: 15px;
     margin-right: 15px;
     line-height: 1.5;
     text-indent: 15px;
+} */
+
+.auto-deal .tit {
+    padding: 15px;
+    line-height: 1.5;
+    text-indent: 15px;
+    background: #ebebeb;
 }
 .auto-deal .nodecoration {
     text-decoration: none;
