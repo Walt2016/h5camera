@@ -109,8 +109,7 @@
         var album = $(".album")
         var mask = $("#mask");
         var bigPic = $("#bigPic");
-        var maskClose = $("#maskClose");
-        var addr = ""
+        var maskClose = $("#maskClose")
 
 
         function maskHeight() {
@@ -397,13 +396,13 @@
         }
 
         // var position = ""
-        // var latitude, longitude;
-        // if ('geolocation' in navigator) {
-        //     navigator.geolocation.getCurrentPosition(function (position) {
-        //         latitude = position.coords.latitude;
-        //         longitude = position.coords.longitude;
-        //     });
-        // }
+        var latitude, longitude;
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+            });
+        }
 
         _.addEvent("change", imgUpload, function () {
             var reader = new FileReader();
@@ -447,8 +446,8 @@
                     ctx.fillText("拍摄时间:" + _.time(new Date()).format("yyyy-MM-dd hh:mm:ss"), 50, cvs
                         .height - 80);
                     ctx.fillText("拍摄人:test", 50, cvs.height - 110);
-                    if (addr)
-                        ctx.fillText("地址信息:" + addr, 50, cvs.height -
+                    if (latitude)
+                        ctx.fillText("地址信息:" + [latitude, longitude], 50, cvs.height -
                             140);
 
                     //标的车：xxx（车牌号）、拍摄时间、拍摄人、拍摄具体地址信息
@@ -545,19 +544,7 @@
             return compressRate;
         }
     </script>
-    <script type="text/javascript" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js">
-    </script>
-    <script>
-        var options = {
-            timeout: 8000
-        };
-        var geolocation = new qq.maps.Geolocation("GO5BZ-R3QRI-3JLGU-55DJP-R3X2F-HFFFG", "h5web");
-        geolocation.getLocation(function (position) {
-            addr = position.addr
-        }, function () {
-            console.log("定位失败")
-        }, options)
-    </script>
+
 </body>
 
 </html>
