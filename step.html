@@ -405,6 +405,23 @@
                 alert("图片过小，请重新上传！");
                 return;
             }
+            // var position = ""
+            // if ('geolocation' in navigator) {
+            //     navigator.geolocation.getCurrentPosition(function (position) {
+            //         //   do_something(position.coords.latitude, position.coords.longitude);
+            //         // ctx.fillText("地址信息:" + position.coords.latitude, 50, cvs.height -
+            //         //     140);
+
+            //         position = position.coords.latitude
+
+            //         // reader.onload = onload
+            //         reader.onload();
+            //     });
+            // } else {
+            //     // reader.onload = onload
+            // }
+
+
             reader.onload = function (e) {
                 var img = new Image(),
                     maxW = 1000; //设置最大宽度
@@ -433,11 +450,12 @@
                     ctx.fillText("标的车：xxx（车牌号）", 50, cvs.height - 50);
                     ctx.fillText("拍摄时间:" + new Date(), 50, cvs.height - 80);
                     ctx.fillText("拍摄人:test", 50, cvs.height - 110);
+                    // ctx.fillText("地址信息:" + position, 50, cvs.height -
+                    //     140);
                     // if ('geolocation' in navigator) {
                     //     navigator.geolocation.getCurrentPosition(function (position) {
                     //         //   do_something(position.coords.latitude, position.coords.longitude);
-                    //         ctx.fillText("地址信息:" + position.coords.latitude, 50, cvs.height -
-                    //             140);
+                    //       
                     //     });
                     // }
 
