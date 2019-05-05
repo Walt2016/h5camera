@@ -443,18 +443,12 @@
                     ctx.font = "30px sans-serif";
                     ctx.fillStyle = "blue";
                     ctx.fillText("标的车：xxx（车牌号）", 50, cvs.height - 50);
-                    ctx.fillText("拍摄时间:" +_.time(new Date()).format("yyyy-MM-dd hh:mm:ss"), 50, cvs.height - 80);
+                    ctx.fillText("拍摄时间:" + _.time(new Date()).format("yyyy-MM-dd hh:mm:ss"), 50, cvs
+                        .height - 80);
                     ctx.fillText("拍摄人:test", 50, cvs.height - 110);
                     if (latitude)
                         ctx.fillText("地址信息:" + [latitude, longitude], 50, cvs.height -
                             140);
-                    // if ('geolocation' in navigator) {
-                    //     navigator.geolocation.getCurrentPosition(function (position) {
-                    //         //   do_something(position.coords.latitude, position.coords.longitude);
-                    //       
-                    //     });
-                    // }
-
 
                     //标的车：xxx（车牌号）、拍摄时间、拍摄人、拍摄具体地址信息
 
