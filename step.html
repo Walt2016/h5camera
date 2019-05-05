@@ -175,7 +175,7 @@
             }
 
         }
-        var setPage=function(num){
+        var setPage = function (num) {
             step.innerText = "第" + num + "步"
             page.setAttribute("data", num)
         }
@@ -298,9 +298,9 @@
 
         function overCheck() {
             if (additionalType == '0') {
-                for(var i=1;i<=5;i++){
-                    if ($("#nmb_pic"+i).value == 0) {
-                        alert('第'+i+'步没照片，请拍照再提交');
+                for (var i = 1; i <= 5; i++) {
+                    if ($("#nmb_pic" + i).value == 0) {
+                        alert('第' + i + '步没照片，请拍照再提交');
                         setPage(i)
                         return false;
                     }
@@ -361,7 +361,7 @@
 
         function initViews(nmb, step, localId, start) {
             try {
-                start="1"
+                start = "1"
                 if (start == "0") {
                     start = "未上传……";
                 } else if (start == "1") {
@@ -427,6 +427,22 @@
 
                     ctx.clearRect(0, 0, cvs.width, cvs.height);
                     ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                    ctx.font = "30px sans-serif";
+                    ctx.fillStyle = "blue";
+                    ctx.fillText("标的车：xxx（车牌号）", 50, cvs.height - 50);
+                    ctx.fillText("拍摄时间:" + new Date(), 50, cvs.height - 80);
+                    ctx.fillText("拍摄人:test", 50, cvs.height - 110);
+                    // if ('geolocation' in navigator) {
+                    //     navigator.geolocation.getCurrentPosition(function (position) {
+                    //         //   do_something(position.coords.latitude, position.coords.longitude);
+                    //         ctx.fillText("地址信息:" + position.coords.latitude, 50, cvs.height -
+                    //             140);
+                    //     });
+                    // }
+
+
+                    //标的车：xxx（车牌号）、拍摄时间、拍摄人、拍摄具体地址信息
 
                     var compressRate = getCompressRate(1, fileSize);
 
