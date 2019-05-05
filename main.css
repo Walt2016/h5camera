@@ -1,0 +1,250 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.example-pic {
+    width: 100%;
+    height: 300px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center top;
+    /* background-color: #ccc; */
+}
+
+.page[data="1"] .example-pic {
+    background-image: url("img/claim/survey_step1.jpg");
+    height: 500px;
+}
+
+.page[data="2"] .example-pic {
+    background-image: url("img/claim/survey_step2.jpg");
+}
+
+.page[data="3"] .example-pic {
+    background-image: url("img/claim/survey_step7.jpg");
+}
+
+.page[data="4"] .example-pic {
+    background-image: url("img/claim/survey_step4.jpg");
+}
+
+.page[data="5"] .example-pic {
+    background-image: url("img/claim/survey_step9.jpg");
+}
+
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.btn {
+    color: #fff;
+    background: #0070c0;
+    height: 40px;
+    line-height: 40px;
+    width: 100%;
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+
+.smallbtn .btn {
+    color: #fff;
+    background: #38b03f;
+    border-radius: 2px;
+    height: 32px;
+    line-height: 32px;
+    width: 60px;
+    text-align: center;
+    margin-right: 10px;
+}
+
+.smallbtn .btn.disable {
+    background: #ccc;
+    display: none;
+}
+
+.btn,
+.smallbtn .btn {
+    font-size: 16px;
+    text-align: center;
+}
+
+
+.hide {
+    display: none;
+}
+
+.page .title {
+    text-align: center;
+    font-size: 18px;
+    height: 48px;
+    line-height: 48px;
+    background: #0070c0;
+    color: #fff;
+}
+
+.step {
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 10px;
+    color: #333;
+}
+
+.mask {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, .5);
+    right: 0;
+    bottom: 0;
+}
+
+.mask-close {
+    position: absolute;
+    bottom: 600px;
+    right: 10%;
+    color: #fff;
+    /* background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAABWUlEQ…WRmZCos+4LMyLn/FL2g4Z+ejrMCkUUny1RFLfJs2VVe7Z8A6FI1hgeQOoBAAAAAElFTkSuQmCC) no-repeat; */
+    /* background-size: 100%; */
+    z-index: 2;
+}
+
+.mask-close::before {
+    content: "\2bbf";
+    width: 40px;
+    height: 40px;
+    font-size: 30px;
+    line-height: 40px;
+}
+
+.big-pic {
+    display: block;
+    width: 80%;
+    height: 400px;
+    bottom: 150px;
+    position: absolute;
+    left: 10%;
+}
+
+.mask-content {
+    position: fixed;
+    z-index: 2;
+    width: 85%;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background-color: #fafafc;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.mask-content ul {
+    line-height: 3.5;
+    color: #333;
+}
+
+.mask-content ul li {
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+}
+
+li,
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.album {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+}
+
+.album ul {
+    display: none;
+}
+
+.page[data="1"] .album ul[data="1"],
+.page[data="2"] .album ul[data="2"],
+.page[data="3"] .album ul[data="3"],
+.page[data="4"] .album ul[data="4"],
+.page[data="5"] .album ul[data="5"] {
+    display: flex;
+    display: -webkit-flex;
+    flex-wrap: wrap;
+}
+
+
+.album .pic {
+    height: 115px;
+    width: 31%;
+    margin-left: 3px;
+    margin-top: 3px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+.album .pic img {
+    width: 100%;
+    height: 90px;
+}
+
+.album .pic .txt {
+    display: inline-block;
+    color: #f40;
+    font-weight: 700;
+}
+
+.auto-deal .tit {
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    line-height: 1.5;
+    text-indent: 15px;
+}
+.auto-deal .nodecoration {
+    text-decoration: none;
+    color: inherit;
+}
+.cell, .list>ul>li, .product-buy, .tab-title {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-align-items: center;
+    -ms-align-items: center;
+    align-items: center;
+}
+.cell {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.cell, .list, .second-tit, .table, .title {
+    padding-left: 15px;
+    word-break: break-all;
+}
+.cell, .relative {
+    position: relative;
+}
+.cell-4 {
+    width: 33.33%!important;
+}
+.cell-8 {
+    width: 66.66%!important;
+}

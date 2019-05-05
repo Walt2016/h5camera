@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+	<title>自助处理</title>
+	<link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+
+
+	<div id="wrap" class="page">
+		<section data-reactroot="" class="auto-deal">
+			<div class="title">自助处理</div>
+			<div class="tit">尊敬的客户，您好！您的车险需要您补传验车照片，请按照操作提示进行拍摄。</div>
+			<div class="mt15">
+				<div class="cell"><span class="cell-4">报案号：</span><span class="cell-8">07600708012019019540</span></div>
+				<div class="cell"><span class="cell-4">车牌号码：</span><span class="cell-8">辽AH56V7</span></div>
+				<div class="cell"><span class="cell-4">报案人：</span><span class="cell-8">刘强</span></div>
+				<div class="cell"><span class="cell-4">电话：</span><span class="cell-8">15702483708</span></div>
+				<div class="cell"><span class="cell-4">协作类型：</span><span class="cell-8">微信直赔</span></div>
+				<div class="cell"><span class="cell-4">类型：</span><span class="cell-8">双方事故</span></div>
+				<div class="cell"><span class="cell-4">任务状态：</span><span class="cell-8">待处理</span></div>
+				<div class="cell"><span class="cell-4">备 注：</span><span class="cell-8"></span></div>
+				<div class="btnwrap" style="display: block;">
+					<div class="btn"><a class="nodecoration btn"
+							href="step.html">现场拍照</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	</div>
+	<script type="text/javascript">
+		var data = {
+			"07600708012019019540": {
+				"is__pkzf": "0",
+				"carLicenceNo": "辽AH56V7",
+				"linkMobile": "15702475575",
+				"mobile": "15702483708",
+				"accidentType": "2",
+				"insuranceType": "A",
+				"registNo": "07600708012019019540",
+				"setLossCde": "907866",
+				"doLossTm": "2019-04-30 14:29:38.0",
+				"linkName": "王尧",
+				"reportPhone": "15702483708",
+				"plyDptNme": "",
+				"setLossNme": "王尧",
+				"plyDptCde": "",
+				"taskLossListMap": {
+					"4969994": {
+						"lossType": "2",
+						"taskType": "0202",
+						"lossId": "1",
+						"lossName": "不详00000",
+						"taskNo": "8781176",
+						"taskLossid": "4969994"
+					},
+					"4969995": {
+						"taskType": "0101",
+						"taskNo": "8781176",
+						"taskLossid": "4969995"
+					}
+				},
+				"setlossMark": "1",
+				"additionalType": "0",
+				"taskStat": "35000001",
+				"cooperationType": "0904",
+				"taskNo": "8781176",
+				"taskYZCode": "0040911",
+				"subTaskStat": "35000001",
+				"mobileName": "刘强"
+			},
+			"resultCde": "1",
+			"message": "获取案件列表成功!"
+		};
+		// var Cell = React.createClass({
+		// 	displayName: "Cell",
+
+		// 	render: function () {
+		// 		return React.createElement(
+		// 			"div", {
+		// 				className: "cell"
+		// 			},
+		// 			React.createElement(
+		// 				"span", {
+		// 					className: "cell-4"
+		// 				},
+		// 				this.props.label
+		// 			),
+		// 			React.createElement(
+		// 				"span", {
+		// 					className: "cell-8"
+		// 				},
+		// 				this.props.value
+		// 			)
+		// 		);
+		// 	}
+		// });
+		var COOPERATIONTYPE_CODE = {
+			'0900': "协勘处理",
+			'0901': "客户自助",
+			'0902': "远程理赔",
+			'0903': "专家支持",
+			'0904': "微信直赔"
+		};
+		var ACCIDENTTYPE_CODE = {
+			'1': "单方事故",
+			"2": "双方事故",
+			"3": "施工机械",
+			"4": "其它财产"
+		};
+		var SUBTASKSTAT_CODE = {
+			'35000000': "待接收",
+			'35000001': "待处理",
+			'35000002': "处理中",
+			'35000004': "损失待确认（自助）",
+			'35000005': "损失已确认（自助）"
+		};
+		var ADDITIONALTYPE_CODE = {
+			'0': '完成',
+			'1': '单证待补传',
+			'2': '单证补传中',
+			'3': '单证补传完成'
+		};
+		// var Card = React.createClass({
+		// 	displayName: "Card",
+
+		// 	render: function () {
+		// 		var item = data["07600708012019019540"];
+		// 		var srvtState = "";
+		// 		var text = item.additionalMark;
+		// 		var isSurvey = true;
+		// 		if (item.subTaskStat != '35000003') {
+		// 			srvtState = SUBTASKSTAT_CODE[item.subTaskStat];
+		// 		} else {
+		// 			srvtState = ADDITIONALTYPE_CODE[item.accidentType];
+		// 			if (item.additionalType == '0') {
+		// 				text = '您的报案已经处理完成，无需再次处理。';
+		// 				isSurvey = false;
+		// 			}
+		// 		}
+		// 		if (item.accidentType == '3') {
+		// 			text = '单证补传完成 。';
+		// 			isSurvey = false;
+		// 		}
+		// 		return React.createElement(
+		// 			"div", {
+		// 				className: "mt15"
+		// 			},
+		// 			React.createElement(Cell, {
+		// 				label: "报案号：",
+		// 				value: item.registNo
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "车牌号码：",
+		// 				value: item.carLicenceNo
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "报案人：",
+		// 				value: item.mobileName
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "电话：",
+		// 				value: item.reportPhone
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "协作类型：",
+		// 				value: COOPERATIONTYPE_CODE[item.cooperationType]
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "类型：",
+		// 				value: ACCIDENTTYPE_CODE[item.accidentType]
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "任务状态：",
+		// 				value: srvtState
+		// 			}),
+		// 			React.createElement(Cell, {
+		// 				label: "备    注：",
+		// 				value: text
+		// 			}),
+		// 			React.createElement(
+		// 				"div", {
+		// 					className: "btnwrap",
+		// 					style: {
+		// 						display: isSurvey ? 'block' : 'none'
+		// 					}
+		// 				},
+		// 				React.createElement(
+		// 					"div", {
+		// 						className: "btn"
+		// 					},
+		// 					React.createElement(
+		// 						"a", {
+		// 							className: "nodecoration btn",
+		// 							href: 'http://pay.tpi.cntaiping.com/h5web/claim/survey/picInit?registNo=' +
+		// 								item.registNo + '&taskNo=' + item.taskNo
+		// 						},
+		// 						"现场拍照"
+		// 					)
+		// 				)
+		// 			)
+		// 		);
+		// 	}
+		// });
+		// var AutoDeal = React.createClass({
+		// 	displayName: "AutoDeal",
+
+		// 	render: function () {
+		// 		return React.createElement(
+		// 			"section", {
+		// 				className: "auto-deal"
+		// 			},
+		// 			React.createElement(Title, {
+		// 				title: "自助处理"
+		// 			}),
+		// 			React.createElement(
+		// 				"div", {
+		// 					className: "tit"
+		// 				},
+		// 				"尊敬的客户，您好！您的车险需要您补传相关资料，请按照任务备注说明进行处理。"
+		// 			),
+		// 			React.createElement(Card, null)
+		// 		);
+		// 	}
+		// });
+		// ReactDOM.render(React.createElement(AutoDeal, null), document.getElementById("wrap"));
+	</script>
+
+
+
+
+	<script>
+		// var _mtac = {
+		// 	"senseQuery": 1
+		// };
+		// (function () {
+		// 	var mta = document.createElement("script");
+		// 	mta.src = "//pingjs.qq.com/h5/stats.js?v2.0.4";
+		// 	mta.setAttribute("name", "MTAH5");
+		// 	mta.setAttribute("sid", "500516978");
+		// 	mta.setAttribute("cid", "500518227");
+		// 	var s = document.getElementsByTagName("script")[0];
+		// 	s.parentNode.insertBefore(mta, s);
+		// })();
+	</script>
+</body>
+
+</html>
