@@ -13,24 +13,24 @@ body {
 }
 
 .page[data="1"] .example-pic {
-    background-image: url("img/claim/survey_step1.jpg");
-    height: 500px;
+    background-image: url("img/1.png");
+    /* height: 500px; */
 }
 
 .page[data="2"] .example-pic {
-    background-image: url("img/claim/survey_step2.jpg");
+    background-image: url("img/2.png");
 }
 
 .page[data="3"] .example-pic {
-    background-image: url("img/claim/survey_step7.jpg");
+    background-image: url("img/3.png");
 }
 
 .page[data="4"] .example-pic {
-    background-image: url("img/claim/survey_step4.jpg");
+    background-image: url("img/4.png");
 }
 
 .page[data="5"] .example-pic {
-    background-image: url("img/claim/survey_step9.jpg");
+    background-image: url("img/5.png");
 }
 
 
