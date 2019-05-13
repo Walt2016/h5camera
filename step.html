@@ -442,17 +442,39 @@
                     ctx.clearRect(0, 0, cvs.width, cvs.height);
                     ctx.drawImage(img, 0, 0, img.width, img.height);
 
-                    ctx.font = "30px sans-serif";
-                    ctx.fillStyle = "blue";
-                    ctx.fillText("标的车：xxx（车牌号）", 50, cvs.height - 50);
-                    ctx.fillText("拍摄时间:" + _.time(new Date()).format("yyyy-MM-dd hh:mm:ss"), 50, cvs
-                        .height - 80);
-                    ctx.fillText("拍摄人:test", 50, cvs.height - 110);
-                    if (addr)
-                        ctx.fillText("地址信息:" + addr, 50, cvs.height -
-                            140);
+                    ctx.font = "20px sans-serif";
 
+                    var info = [{
+                        txt: "标的车：xxx（车牌号）",
+                        x: 10,
+                        y: cvs.height - 50
+                    }, {
+                        txt: "拍摄时间:" + _.time(new Date()).format("yyyy-MM-dd hh:mm:ss"),
+                        x: 10,
+                        y: cvs.height - 80
+                    }, {
+                        txt: "拍摄人:test",
+                        x: 10,
+                        y: cvs.height - 110
+                    }]
+
+                    if (addr) {
+                        info.push({
+                            txt: "地址信息:" + addr,
+                            x: 10,
+                            y: cvs.height - 140
+                        })
+                    }
                     //标的车：xxx（车牌号）、拍摄时间、拍摄人、拍摄具体地址信息
+
+                    info.forEach(function (t) {
+                        ctx.beginPath();
+                        ctx.fillStyle = "rgba(255,255,255,0.5)"; //"white";
+                        ctx.rect(t.x, t.y - 20, ctx.measureText(t.txt).width + 5, 25)
+                        ctx.fill();
+                        ctx.fillStyle = "black";
+                        ctx.fillText(t.txt, t.x, t.y)
+                    })
 
                     var compressRate = getCompressRate(1, fileSize);
 
