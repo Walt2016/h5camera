@@ -13,24 +13,24 @@ body {
 }
 
 .page[data="1"] .example-pic {
-    background-image: url("img/1.png");
+    background-image: url("img/1.jpg");
     /* height: 500px; */
 }
 
 .page[data="2"] .example-pic {
-    background-image: url("img/2.png");
+    background-image: url("img/2.jpg");
 }
 
 .page[data="3"] .example-pic {
-    background-image: url("img/3.png");
+    background-image: url("img/3.jpg");
 }
 
 .page[data="4"] .example-pic {
-    background-image: url("img/4.png");
+    background-image: url("img/4.jpg");
 }
 
 .page[data="5"] .example-pic {
-    background-image: url("img/5.png");
+    background-image: url("img/5.jpg");
 }
 
 
